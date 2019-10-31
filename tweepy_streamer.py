@@ -3,6 +3,7 @@ from tweepy import Cursor
 from tweepy import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
+import pymongo
 import json
 import twitter_credentials
 """
