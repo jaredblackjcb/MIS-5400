@@ -5,7 +5,7 @@ from tweepy import OAuthHandler
 from tweepy import Stream
 import pymongo
 import json
-import twitter_credentials
+from config import TwitterAuthenticate
 """
 Data not saving correctly from cursor. Only works with live streamer.
 Data information:
@@ -14,35 +14,16 @@ Data fields available include time, location, and text of tweet, number of retwe
 I can use many of those as variables to explain stock price fluctuations.
 """
 
-class TwitterClient():
-    """
-    Class retrieves tweets from a particular user and saves them to a json file
-    """
-    def __init__(self, fetched_tweets_filename, twitter_user=None):
-        self.auth = TwitterAuthenticate().authenticate_twitter_app()
-        self.twitter_client = API(self.auth)
-        self.twitter_user = twitter_user
-        self.fetched_tweets_filename = fetched_tweets_filename
 
-    def get_user_timeline_tweets(self, num_tweets):
-        #tweets = []
-        for tweet in Cursor(self.twitter_client.user_timeline, id=self.twitter_user).items(num_tweets):
-            #tweets.append(tweet)
-            try:
-                with open(self.fetched_tweets_filename, 'a') as tf:
-                    tf.write(str(tweet))
-            except Exception as e:
-                print(f"Error retreiving data: {str(e)}")
-        #return tweets
 
-class TwitterAuthenticate():
-    """
-    Class contains logic for twitter API authentication and returns it as an object named "auth"
-    """
-    def authenticate_twitter_app(self):
-        auth = OAuthHandler(twitter_credentials.CONSUMER_KEY, twitter_credentials.CONSUMER_SECRET)
-        auth.set_access_token(twitter_credentials.ACCESS_TOKEN, twitter_credentials.ACCESS_TOKEN_SECRET)
-        return auth
+# class TwitterAuthenticate():
+#     """
+#     Class contains logic for twitter API authentication and returns it as an object named "auth"
+#     """
+#     def authenticate_twitter_app(self):
+#         auth = OAuthHandler(twitter_credentials.CONSUMER_KEY, twitter_credentials.CONSUMER_SECRET)
+#         auth.set_access_token(twitter_credentials.ACCESS_TOKEN, twitter_credentials.ACCESS_TOKEN_SECRET)
+#         return auth
 
 class TwitterStreamer():
     """
@@ -61,6 +42,7 @@ class TwitterStreamer():
 class TwitterListener(StreamListener):
 
     def __init__(self, fetched_tweets_filename):
+        super().__init__()
         self.fetched_tweets_filename = fetched_tweets_filename
 
     def on_data(self, raw_data):
@@ -80,17 +62,14 @@ class TwitterListener(StreamListener):
 
 if __name__ == "__main__":
 
+    # twitter_client = TwitterClient("data/tweets.json", "realDonaldTrump")
+    # twitter_client.get_user_timeline_tweets(1)
+    # with open(f"data/tweets.json", 'w') as file:
+    #   json.dump(data, file)
+    # Retrieves real time tweets about Trump or China
     hashtag_list = ["trump", "china"]
     fetched_tweets_filename = "data/tweets.json"
 
-    twitter_client = TwitterClient("data/tweets.json", "realDonaldTrump")
-    twitter_client.get_user_timeline_tweets(1)
-    #with open(f"data/tweets.json", 'w') as file:
-     #   json.dump(data, file)
+    twitter_streamer = TwitterStreamer()
+    twitter_streamer.stream_tweets(fetched_tweets_filename, hashtag_list)
 
-
-
-    #twitter_streamer = TwitterStreamer()
-    #twitter_streamer.stream_tweets(fetched_tweets_filename, hashtag_list)
-
-    #stream.firehose()
