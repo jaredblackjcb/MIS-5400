@@ -6,6 +6,7 @@ import re
 import pandas as pd
 import numpy as np
 from textblob import TextBlob
+from pymongo import  MongoClient
 
 class TwitterClient():
     """
@@ -63,23 +64,16 @@ if __name__ == "__main__":
     df = tweet_analyzer.tweets_to_data_frame(tweets)
     df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(text) for text in df['text']])
 
-    print(df)
+    # print(df)
 
-
-
-
-
-    # Extract _json portion of tweepy Status object
-    # json_str_list = []
-    # for status in data:
-    #     json_str = json.dumps(status._json)
-    #     json_str_list.append(json_str)
-
-    # print(json_str_list)
-    # print(type(json_str_list))
-    # with open(r"data/scratch.json", 'a') as f:
-    #     for i in json_str_list:
-    #         f.write(',[' + i + ']\n')
+    client = MongoClient('localhost', 27017)
+    db = client.twitter_data
+    trump_tweets = db.trump_tweets
+    trump_tweets.drop()
+    df_dict = df.to_dict("records")
+    for i, row in enumerate(df_dict):
+        row['_id'] = i
+        trump_tweets.insert_one(row)
 
 
 
