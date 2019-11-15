@@ -24,19 +24,25 @@ if __name__ == "__main__":
     file_path = "data/scratch.json"
 
     client = TwitterClient(file_path, user)
-    data = client.get_user_timeline_tweets(3)
+    data = client.get_user_timeline_tweets(10)
     print(data)
     print(type(data))
     print(type(data[0]))
 
 
     # Extract _json portion of tweepy Status object
-    json_str_list = []
-    for status in data:
-        json_str = json.dumps(status._json)
-        json_str_list.append(json_str)
+    # json_str_list = []
+    # for status in data:
+    #     json_str = json.dumps(status._json)
+    #     json_str_list.append(json_str)
 
-    print(json_str_list)
+    # print(json_str_list)
+    # print(type(json_str_list))
+    # with open(r"data/scratch.json", 'a') as f:
+    #     for i in json_str_list:
+    #         f.write(',[' + i + ']\n')
+
+
 
 
 

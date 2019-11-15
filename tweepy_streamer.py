@@ -37,6 +37,7 @@ class TwitterStreamer():
         listener = TwitterListener(fetched_tweets_filename)
         auth = self.twitter_authentication.authenticate_twitter_app()
         stream = Stream(auth, listener)
+
         stream.filter(track=hashtag_list)
 
 class TwitterListener(StreamListener):
