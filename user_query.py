@@ -54,17 +54,15 @@ if __name__ == "__main__":
     twitter_client = TwitterClient()
     api = twitter_client.get_twitter_client_api()
 
-    desired_width = 320
-    pd.set_option('display.width', desired_width)
-    np.set_printoptions(linewidth=desired_width)
-    pd.set_option('display.max_columns', 10)
+    # desired_width = 320
+    # pd.set_option('display.width', desired_width)
+    # np.set_printoptions(linewidth=desired_width)
+    # pd.set_option('display.max_columns', 10)
 
-    tweets = api.user_timeline(screen_name=user, count=100)
+    tweets = api.user_timeline(screen_name=user, count=25000)
 
     df = tweet_analyzer.tweets_to_data_frame(tweets)
     df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(text) for text in df['text']])
-
-    # print(df)
 
     client = MongoClient('localhost', 27017)
     db = client.twitter_data
