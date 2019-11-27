@@ -1,5 +1,6 @@
-# MIS 5400 Project
-##Project Overview
+# Impact of Presidential Tweets on Market Volatility
+
+## Project Overview
 
 Twitter has rapidly increased the speed of information flow in recent years. 
 This project aims to discover how that impacts securities markets. Specifically, 
@@ -23,4 +24,6 @@ The next step in the project will be to pull all the data together into a
 Jupyter notebook and perform a regression analysis. I will plot the tweet
 frequency and VIX prices side by side to see how much correlation exists 
 between them. I plan to quantify the amount of influence each variable has over
-market volatility and compute its significance level.
+market volatility and compute its significance level. That will allow me to draw
+a conclusion and determine whether the president's twitter account has a
+significant impact on market volatility.
