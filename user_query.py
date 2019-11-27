@@ -32,9 +32,8 @@ class TweetAnalyzer():
     Create pd data frame
     '''
     def tweets_to_data_frame(self, tweets):
-        df = pd.DataFrame(data=[tweet.id for tweet in tweets], columns=['id'])
+        df = pd.DataFrame(data=[tweet.created_at for tweet in tweets], columns=['date'])
 
-        df['date'] = np.array([tweet.created_at for tweet in tweets])
         df['user'] = np.array([tweet.user.name for tweet in tweets])
         df['text'] = np.array([tweet.text for tweet in tweets])
         df['char_count'] = np.array([len(tweet.text) for tweet in tweets])

@@ -3,6 +3,8 @@ from flask import Flask, g, render_template, abort, request
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 
+client = MongoClient('localhost', 27017)
+db = client.twitter_data
 
 # Setup Flask
 app = Flask(__name__)
@@ -15,9 +17,7 @@ def home_page():
 
 # GET ALL /api/v1/trump_tweets
 @app.route('/api/v1/trump_tweets', methods=['GET'])
-def get_all_books():
-    client = MongoClient('localhost', 27017)
-    db = client.twitter_data
+def get_all_tweets():
 
     trump_tweets = db.trump_tweets.find()
 
@@ -25,14 +25,29 @@ def get_all_books():
 
 # GET ONE /api/v1/trump_tweets
 @app.route('/api/v1/trump_tweets/<string:id>', methods=['GET'])
-def get_one_book():
-    client = MongoClient('localhost', 27017)
-    db = client.twitter_data
-    # trump_tweets = db.trump_tweets
+def get_one_tweet(id):
 
-    book = db.trump_tweets.find({"_id": ObjectId(id)})
+    tweet = db.trump_tweets.find({"_id": int(id)})
+    print(tweet)
+    return dumps(tweet), 200
 
-    return dumps(book), 200
+# POST API (Add)
+@app.route('/api/v1/insert_tweet', methods=['POST'])
+def insert_new():
+    data = request.get_json()
+
+    if isinstance(data, dict):
+        db.trump_tweets.insert_one(data)
+
+    if isinstance(data, list):
+        db.trump_tweets.insert_many(data)
+
+    return 'success', 200
+
+# DELETE API
+@app.route('/api/v1/delete/<string:id>', methods=['DELETE'])
+def delete_one(id):
+    db.trump_tweets.delete_one({'_id': int(id)})
 
 
 if __name__ == '__main__':
