@@ -1,3 +1,5 @@
+import tweepy
+
 from config import TwitterAuthenticate
 from tweepy import API
 from tweepy import Cursor
@@ -23,7 +25,9 @@ class TwitterClient():
 
     def get_user_timeline_tweets(self, num_tweets):
         tweets = []
+
         for tweet in Cursor(self.twitter_client.user_timeline, id=self.twitter_user).items(num_tweets):
+
             tweets.append(tweet)
         return tweets
 
@@ -58,7 +62,9 @@ if __name__ == "__main__":
     # np.set_printoptions(linewidth=desired_width)
     # pd.set_option('display.max_columns', 10)
 
-    tweets = api.user_timeline(screen_name=user, count=25000)
+    tweets = []
+    for status in tweepy.Cursor(api.user_timeline, screen_name=user, count=200, exclude_replies=True).items():
+        tweets.append(status)
 
     df = tweet_analyzer.tweets_to_data_frame(tweets)
     df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(text) for text in df['text']])
