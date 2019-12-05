@@ -51,7 +51,7 @@ class TweetAnalyzer():
         analysis = TextBlob(self.clean_text(text))
         return analysis.sentiment.polarity
 
-if __name__ == "__main__":
+def get_trump_tweet_data():
     user = "realDonaldTrump"
     tweet_analyzer = TweetAnalyzer()
     twitter_client = TwitterClient()
@@ -68,15 +68,23 @@ if __name__ == "__main__":
 
     df = tweet_analyzer.tweets_to_data_frame(tweets)
     df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(text) for text in df['text']])
+    return df
 
+def insert_trump_tweets_into_mongodb():
     client = MongoClient('localhost', 27017)
     db = client.twitter_data
     trump_tweets = db.trump_tweets
     trump_tweets.drop()
+    df = get_trump_tweet_data()
     df_dict = df.to_dict("records")
     for i, row in enumerate(df_dict):
         row['_id'] = i
         trump_tweets.insert_one(row)
+
+
+if __name__ == "__main__":
+    get_trump_tweet_data()
+    insert_trump_tweets_into_mongodb()
 
 
 

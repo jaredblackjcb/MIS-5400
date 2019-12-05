@@ -1,5 +1,4 @@
 import tweepy
-
 from config import TwitterAuthenticate
 from tweepy import API
 from tweepy import Cursor
